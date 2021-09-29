@@ -1,0 +1,26 @@
+name = "" 
+type = "javascript"
+workers_dev = false
+account_id = ""
+route = ""
+compatibility_date = "2021-09-29"
+compatibility_flags = [ "formdata_parser_supports_files" ] # required
+zone_id = ""
+
+[vars]
+WORKERS_RS_VERSION = "0.0.6"
+
+[build]
+command = "cargo install -q worker-build && worker-build --release" # required
+
+[build.upload]
+dir    = "build/worker"
+format = "modules"
+main   = "./shim.mjs"
+
+[[build.upload.rules]]
+globs = ["**/*.wasm"]
+type  = "CompiledWasm"
+
+# read more about configuring your Worker via wrangler.toml at:
+# https://developers.cloudflare.com/workers/cli-wrangler/configuration
