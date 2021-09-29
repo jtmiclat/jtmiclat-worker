@@ -33,7 +33,7 @@ pub async fn main(req: Request, env: Env) -> Result<Response> {
     )?;
     headers.set(
         "content-security-policy",
-        "default-src 'self' *.google-analytics.com",
+        "default-src 'self' *.google-analytics.com  cloudflareinsights.com *.cloudflareinsights.com",
     )?;
     headers.set("cf-worker-version", &version)?;
     Ok(Response::from_html(response.text().await?)?.with_headers(headers))
