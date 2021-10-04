@@ -19,7 +19,8 @@ pub async fn main(req: Request, env: Env) -> Result<Response> {
     utils::set_panic_hook();
     let version = env.var("WORKERS_RS_VERSION")?.to_string();
     let mut response = worker::Fetch::Request(req).send().await?;
-    let mut headers = response.headers().clone();
+    let old_headers = response.headers();
+    let mut headers = old_headers.clone();
     headers.set(
         "strict-transport-security",
         "max-age=31536000; includeSubDomains",
@@ -27,14 +28,11 @@ pub async fn main(req: Request, env: Env) -> Result<Response> {
     headers.set("x-frame-options", "SAMEORIGIN")?;
     headers.set("x-content-type-options", "nosniff")?;
     headers.set("referrer-policy", "no-referrer")?;
-    headers.set(
-        "permissions-policy",
-        "microphone 'none'; geolocation 'none'",
-    )?;
+    headers.set("permissions-policy", "microphone 'none'")?;
     headers.set(
         "content-security-policy",
-        "default-src 'self' *.google-analytics.com  cloudflareinsights.com *.cloudflareinsights.com",
+        "default-src 'self' 'unsafe-inline' *.google-analytics.com  cloudflareinsights.com *.cloudflareinsights.com",
     )?;
     headers.set("cf-worker-version", &version)?;
-    Ok(Response::from_html(response.text().await?)?.with_headers(headers))
+    Ok(Response::from_bytes(response.bytes().await?)?.with_headers(headers))
 }
