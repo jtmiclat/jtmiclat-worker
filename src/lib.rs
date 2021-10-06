@@ -19,8 +19,7 @@ pub async fn main(req: Request, env: Env) -> Result<Response> {
     utils::set_panic_hook();
     let version = env.var("WORKERS_RS_VERSION")?.to_string();
     let mut response = worker::Fetch::Request(req).send().await?;
-    let old_headers = response.headers();
-    let mut headers = old_headers.clone();
+    let mut headers = response.headers().clone();
     headers.set(
         "strict-transport-security",
         "max-age=31536000; includeSubDomains",
