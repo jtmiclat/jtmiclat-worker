@@ -12,13 +12,14 @@ fn log_request(req: &Request) {
 }
 
 #[event(fetch)]
-pub async fn main(req: Request, env: Env) -> Result<Response> {
+pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Response> {
     log_request(&req);
 
     // Optionally, get more helpful error messages written to the console in the case of a panic.
     utils::set_panic_hook();
     let version = env.var("WORKERS_RS_VERSION")?.to_string();
-    let mut response = worker::Fetch::Request(req).send().await?;
+    let response = worker::Fetch::Request(req).send().await?;
+
     let mut headers = response.headers().clone();
     headers.set(
         "strict-transport-security",
@@ -33,5 +34,5 @@ pub async fn main(req: Request, env: Env) -> Result<Response> {
         "default-src 'self' 'unsafe-inline' *.google-analytics.com  cloudflareinsights.com *.cloudflareinsights.com www.googletagmanager.com avatars.githubusercontent.com",
     )?;
     headers.set("cf-worker-version", &version)?;
-    Ok(Response::from_bytes(response.bytes().await?)?.with_headers(headers))
+    Ok(response.with_headers(headers))
 }
