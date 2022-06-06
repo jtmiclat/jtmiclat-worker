@@ -30,7 +30,7 @@ pub async fn main(req: Request, env: Env) -> Result<Response> {
     headers.set("permissions-policy", "microphone 'none'")?;
     headers.set(
         "content-security-policy",
-        "default-src 'self' 'unsafe-inline' *.google-analytics.com  cloudflareinsights.com *.cloudflareinsights.com",
+        "default-src 'self' 'unsafe-inline' *.google-analytics.com  cloudflareinsights.com *.cloudflareinsights.com www.googletagmanager.com avatars.githubusercontent.com",
     )?;
     headers.set("cf-worker-version", &version)?;
     Ok(Response::from_bytes(response.bytes().await?)?.with_headers(headers))
