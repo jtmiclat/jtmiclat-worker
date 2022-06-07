@@ -33,6 +33,8 @@ pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Respo
         "content-security-policy",
         "default-src 'self' 'unsafe-inline' *.google-analytics.com  cloudflareinsights.com *.cloudflareinsights.com www.googletagmanager.com avatars.githubusercontent.com",
     )?;
+    // Delete access control since i am too lazy to set this
+    headers.delete("access-control-allow-origin")?;
     headers.set("cf-worker-version", &version)?;
     Ok(response.with_headers(headers))
 }
