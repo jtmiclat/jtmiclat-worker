@@ -31,7 +31,7 @@ pub async fn main(req: Request, env: Env, _ctx: worker::Context) -> Result<Respo
     headers.set("permissions-policy", "microphone 'none'")?;
     headers.set(
         "content-security-policy",
-        "default-src 'self' 'unsafe-inline'  cloudflareinsights.com *.cloudflareinsights.com",
+        "default-src 'self' 'unsafe-inline' 'unsafe-eval' cloudflareinsights.com *.cloudflareinsights.com",
     )?;
     // Delete access control since i am too lazy to set this
     headers.delete("access-control-allow-origin")?;
